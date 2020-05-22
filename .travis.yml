@@ -1,0 +1,38 @@
+language: java
+
+sudo: false
+
+cache:
+  directories:
+    - "$HOME/.m2"
+
+jdk:
+  - openjdk8
+
+before_install:
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - export PROJECT_VERSION=$(mvn help:evaluate -N -Dexpression=project.version -q -DforceStdout)
+
+install:
+  - mvn --settings .travis/maven.xml -Prelease install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+
+script:
+  - mvn --settings .travis/maven.xml -Prelease clean deploy
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: v94kd9MnhM67/7Mjm6JTqnwQzZvpidKPOMx1wEdyZphQ8l8ZXif5MS4GzCVmzkWGEfc2+2Yh37gUEMahJjSoKou0+Lclh0Qcbjiukaa99DxebUmtbfNc8rYyySbEJDcq6g6fXduAP8DCrhte64PFO8yOtZYl+EuiMQTNouVFwBOQZIOQOYqgGD0pOK3Z+LJSCfpX5cEXqU9NV9aY2la1i29j6TOMI3p7fTO8I+dkqlQL7M1vnvNG53M+i3f32pjzZOqcIfQZSZInstaeR3rx9me8nyLAdMcWyCxyWW+6QGCDQ0UjMigTqcMrThkcWMT2m4uAm5F3lnWGDM07FJTdb22qDoJcsxV7SP6vDSyX0jTcalhiXHw6qf80/RgCpQpOLqBiNpXnRxcGvVDtRagVZZjw6GtMD22wKpQAeNEJfx8hQsusAHK2zQURa5uJq3m5KIVxX0+/bkZWeQvk6LgylOFSafBDfYO/mp4Z2Y+iKaKq9B7/5S8MWgTtA5crWB+dMMly57Lfzj3e8vAR1w2WYPrMmb4GRsQC5bNgQId1wdE20IfpyL6PaGApdEYNCN6+rO36UqlxK44O5qtR9JXPYleyevL7MF/B7O7jA7OYC3pLHwCVOZoNfXNr+5E6++qoN8eyKevOksXlrYUk0Xf1YaIeVQwOCM83gzVf0XwgaMA=
+    file_glob: true
+    file:
+      - target/*.pom
+      - target/*.pom.asc
+      - target/*.jar
+      - target/*.jar.asc
+    name: $PROJECT_VERSION
+    skip_cleanup: true
+    on:
+      repo: hdensity/magnolia-events
+      all_branches: true
+      tags: true
