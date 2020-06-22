@@ -38,6 +38,9 @@ import java.time.ZoneId;
 @FieldType("zoneIdField")
 public class ZoneIdFieldDefinition extends ComboBoxFieldDefinition<ZoneId> {
 
+    /**
+     * Creates a new ZoneIdFieldDefinition with default configuration.
+     */
     public ZoneIdFieldDefinition() {
         setDatasource(new ZoneIdDataSourceDefinition());
         setConverterClass(ZoneIdConverter.class);

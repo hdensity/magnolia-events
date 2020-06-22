@@ -46,6 +46,9 @@ public class LocalDateTimeFieldDefinition extends ConfiguredFieldDefinition<Obje
     private FormatStyle dateFormat = SHORT;
     private FormatStyle timeFormat = SHORT;
 
+    /**
+     * Creates a new LocalDateTimeFieldDefinition with default configuration.
+     */
     public LocalDateTimeFieldDefinition() {
         setFactoryClass(LocalDateTimeFieldFactory.class);
         setConverterClass(LocalDateTimeToStringConverter.class);

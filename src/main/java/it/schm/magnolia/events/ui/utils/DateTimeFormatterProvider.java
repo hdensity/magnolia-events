@@ -24,20 +24,12 @@
 
 package it.schm.magnolia.events.ui.utils;
 
-import info.magnolia.cms.security.MgnlUserManager;
-import info.magnolia.context.Context;
-import org.apache.commons.lang3.LocaleUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import javax.inject.Inject;
-import javax.inject.Provider;
 
-import java.time.ZoneId;
 import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * A provider of locale dependent {@link DateTimeFormatter}s.
@@ -45,12 +37,12 @@ import java.util.TimeZone;
 public class DateTimeFormatterProvider {
 
     private final DateTimeFormatProvider dateTimeFormatProvider;
-    private final Provider<Context> contextProvider;
+    private final UserPreferences userPreferences;
 
     @Inject
-    public DateTimeFormatterProvider(DateTimeFormatProvider dateTimeFormatProvider, Provider<Context> contextProvider) {
+    public DateTimeFormatterProvider(DateTimeFormatProvider dateTimeFormatProvider, UserPreferences userPreferences) {
         this.dateTimeFormatProvider = dateTimeFormatProvider;
-        this.contextProvider = contextProvider;
+        this.userPreferences = userPreferences;
     }
 
     /**
@@ -63,19 +55,13 @@ public class DateTimeFormatterProvider {
      * @return The configured {@code DateTimeFormatter}
      */
     public DateTimeFormatter get(FormatStyle dateFormatStyle, FormatStyle timeFormatStyle, boolean userTime) {
-        Locale current = LocaleUtils.toLocale(contextProvider.get().getUser().getLanguage());
+        Locale current = userPreferences.getLocale();
 
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern(dateTimeFormatProvider.get(dateFormatStyle, timeFormatStyle), current)
                         .withChronology(Chronology.ofLocale(current));
 
-        return userTime ? formatter.withZone(zoneId()) : formatter;
-    }
-
-    private ZoneId zoneId() {
-        final String timeZoneId = contextProvider.get().getUser().getProperty(MgnlUserManager.PROPERTY_TIMEZONE);
-
-        return StringUtils.isEmpty(timeZoneId) ? ZoneId.systemDefault() : TimeZone.getTimeZone(timeZoneId).toZoneId();
+        return userTime ? formatter.withZone(userPreferences.getZoneId()) : formatter;
     }
 
 }

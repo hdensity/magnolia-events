@@ -37,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.inject.Provider;
 
 import java.time.ZoneId;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -66,6 +67,12 @@ class UserPreferencesTest {
     void given_configuredZoneId_when_getZoneId_then_expectedZoneIdIsReturned() {
         when(userMock.getProperty(MgnlUserManager.PROPERTY_TIMEZONE)).thenReturn("Europe/Luxembourg");
         assertThat(userPreferences.getZoneId()).isEqualTo(ZoneId.of("Europe/Luxembourg"));
+    }
+
+    @Test
+    void when_getLocale_then_expectedLocaleIsReturned() {
+        when(userMock.getLanguage()).thenReturn("de_DE");
+        assertThat(userPreferences.getLocale()).isEqualTo(Locale.forLanguageTag("de-DE"));
     }
 
 }

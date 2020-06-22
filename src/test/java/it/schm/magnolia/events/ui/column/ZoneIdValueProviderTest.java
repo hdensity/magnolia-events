@@ -27,7 +27,6 @@ package it.schm.magnolia.events.ui.column;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockProperty;
 import info.magnolia.ui.editor.LocaleContext;
-import it.schm.magnolia.events.ui.datasource.ZoneIdItemCaptionGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+
 import java.time.ZoneId;
 import java.util.Locale;
 

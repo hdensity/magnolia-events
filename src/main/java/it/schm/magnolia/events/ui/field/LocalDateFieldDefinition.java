@@ -45,6 +45,9 @@ public class LocalDateFieldDefinition extends ConfiguredFieldDefinition<Object> 
 
     private FormatStyle dateFormat = SHORT;
 
+    /**
+     * Creates a new LocalDateFieldDefinition with default configuration.
+     */
     public LocalDateFieldDefinition() {
         setFactoryClass(LocalDateFieldFactory.class);
         setConverterClass(LocalDateToStringConverter.class);

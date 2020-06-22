@@ -31,8 +31,6 @@ import it.schm.magnolia.events.ui.factory.ZonedDateTimeFieldFactory;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.inject.Inject;
-
 import java.time.format.FormatStyle;
 
 import static java.time.format.FormatStyle.SHORT;
@@ -48,7 +46,9 @@ public class ZonedDateTimeFieldDefinition extends ConfiguredFieldDefinition<Obje
     private FormatStyle dateFormat = SHORT;
     private FormatStyle timeFormat = SHORT;
 
-    @Inject
+    /**
+     * Creates a new ZonedDateTimeFieldDefinition with default configuration.
+     */
     public ZonedDateTimeFieldDefinition() {
         setFactoryClass(ZonedDateTimeFieldFactory.class);
         setConverterClass(ZonedDateTimeToStringConverter.class);

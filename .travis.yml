@@ -5,6 +5,7 @@ sudo: false
 cache:
   directories:
     - "$HOME/.m2"
+    - .codacy-coverage
 
 jdk:
   - openjdk8
@@ -19,6 +20,7 @@ install:
 
 script:
   - mvn --settings .travis/maven.xml -Prelease clean deploy
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh)
 
 deploy:
   - provider: releases

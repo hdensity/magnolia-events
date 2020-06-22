@@ -27,6 +27,7 @@ package it.schm.magnolia.events.ui.converter;
 import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -51,8 +52,11 @@ public abstract class AbstractTemporalConverter<T> implements Converter<Object, 
 
     @Override
     public T convertToPresentation(String value, ValueContext context) {
-        return Objects.isNull(value) ? null :
-                (NOW.equalsIgnoreCase(value) ? nowSupplier.get() : parserFunction.apply(value));
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        }
+
+        return NOW.equalsIgnoreCase(value) ? nowSupplier.get() : parserFunction.apply(value);
     }
 
 }

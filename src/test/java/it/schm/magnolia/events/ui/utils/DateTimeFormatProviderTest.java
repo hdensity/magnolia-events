@@ -26,7 +26,6 @@ package it.schm.magnolia.events.ui.utils;
 
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
-import it.schm.magnolia.events.ui.utils.DateTimeFormatProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Provider;
+
 import java.time.format.FormatStyle;
 
 import static org.assertj.core.api.Assertions.assertThat;

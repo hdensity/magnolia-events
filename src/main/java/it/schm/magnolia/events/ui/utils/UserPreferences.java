@@ -26,11 +26,13 @@ package it.schm.magnolia.events.ui.utils;
 
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.context.Context;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
 
 import java.time.ZoneId;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -53,6 +55,15 @@ public class UserPreferences {
         String timeZoneId = contextProvider.get().getUser().getProperty(MgnlUserManager.PROPERTY_TIMEZONE);
 
         return StringUtils.isEmpty(timeZoneId) ? ZoneId.systemDefault() : TimeZone.getTimeZone(timeZoneId).toZoneId();
+    }
+
+    /**
+     * Returns the user's configured Locale.
+     *
+     * @return the user's configured Locale.
+     */
+    public Locale getLocale() {
+        return LocaleUtils.toLocale(contextProvider.get().getUser().getLanguage());
     }
 
 }
