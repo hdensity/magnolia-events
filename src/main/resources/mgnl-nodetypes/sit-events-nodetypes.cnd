@@ -1,0 +1,4 @@
+<'sit'='http://magnolia.schm.it/jcr/1.0'>
+
+[sit:event] > mgnl:content
+  orderable

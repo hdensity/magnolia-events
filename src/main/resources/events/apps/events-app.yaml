@@ -1,0 +1,257 @@
+class: info.magnolia.ui.contentapp.configuration.ContentAppDescriptor
+appClass: info.magnolia.ui.framework.app.BaseApp
+name: events-app
+icon: icon-events
+
+datasource:
+  $type: jcrDatasource
+  workspace: events
+  allowedNodeTypes:
+    event: sit:event
+    folder: mgnl:folder
+
+subApps:
+  browser:
+    class: info.magnolia.ui.contentapp.configuration.BrowserDescriptor
+    actions:
+      add:
+        icon: icon-add-item
+        $type: openDetailSubappAction
+        appName: events-app
+        subAppName: detail
+        viewType: add
+        availability:
+          root: true
+          nodes: false
+          writePermissionRequired: true
+          rules:
+            notDeleted: &notDeleted
+              $type: jcrIsDeletedRule
+              negate: true
+      edit:
+        icon: icon-edit
+        $type: openDetailSubappAction
+        appName: events-app
+        subAppName: detail
+        viewType: edit
+      delete:
+        $type: markAsDeletedAction
+        availability: &notDeletedAvailability
+          rules:
+            notDeleted: *notDeleted
+      confirmDeletion:
+        $type: deleteNodesConfirmationAction
+        icon: icon-delete
+        successActionName: delete
+        availability:
+          multiple: true
+          writePermissionRequired: true
+          nodeTypes:
+            event: sit:event
+          rules:
+            notDeleted: *notDeleted
+      publish: &publish
+        icon: icon-publish
+        $type: jcrCommandAction
+        command: publish
+        catalog: versioned
+        availability:
+          writePermissionRequired: true
+          rules:
+            notDeleted: *notDeleted
+            isPublishable: &isPublishable
+              $type: jcrPublishableRule
+      publishDeletion:
+        icon: icon-publish
+        $type: jcrCommandAction
+        command: publish
+        availability:
+          multiple: true
+          rules:
+            isDeleted: &isDeleted
+              $type: jcrIsDeletedRule
+              negate: false
+      unpublish: &unpublish
+        icon: icon-unpublish
+        $type: jcrCommandAction
+        command: unpublish
+        availability:
+          rules:
+            notDeleted: *notDeleted
+            isPublished:
+              $type: jcrPublishedRule
+      export:
+        icon: icon-export
+        $type: exportAction
+        availability: *notDeletedAvailability
+      import:
+        icon: icon-import
+        $type: openDialogAction
+        dialogId: ui-framework-jcr:import
+        availability:
+          root: true
+          rules:
+            notDeleted: *notDeleted
+      versionShow:
+        icon: icon-show-versions
+        $type: openDialogAction
+        dialogId: events-app:versions
+        availability:
+          rules:
+            notDeleted: *notDeleted
+            hasVersionsRule: &hasVersionsRule
+              class: info.magnolia.ui.availability.rule.JcrHasVersionsRuleDefinition
+      versionRestore:
+        icon: icon-retrieve-versions
+        $type: openDialogAction
+        dialogId: ui-framework-jcr:restoreVersion
+        availability:
+          writePermissionRequired: true
+          rules:
+            hasVersionsRule: *hasVersionsRule
+            isDeleted: *notDeleted
+      restorePreviousVersion:
+        icon: icon-undo
+        parentNodeTypeOnly: true
+        $type: restorePreviousJcrVersionAction
+        availability:
+          writePermissionRequired: true
+          rules:
+            hasVersionsRule: *hasVersionsRule
+            isDeleted: *isDeleted
+      showPreviousVersion:
+        icon: icon-view
+        $type: showPreviousJcrVersionAction
+        appName: events-app
+        subAppName: detail
+        viewType: version
+        availability:
+          writePermissionRequired: true
+          rules:
+            hasVersionsRule: *hasVersionsRule
+            isDeleted: *isDeleted
+    actionbar:
+      defaultAction: edit
+      deleteAction: confirmDeletion
+      sections:
+        - name: events
+          availability:
+            root: true
+            rules:
+              notDeleted: *notDeleted
+          groups:
+            - name: add-delete
+              items:
+                - name: add
+                - name: edit
+                - name: confirmDeletion
+            - name: publish
+              items:
+                - name: publish
+                - name: unpublish
+            - name: exportimport
+              items:
+                - name: export
+                - name: import
+            - name: versioning
+              items:
+                - name: versionShow
+                - name: versionRestore
+        - name: deletedEvent
+          availability:
+            rules:
+              isDeleted: *isDeleted
+          groups:
+            - name: add-delete
+              items:
+                - name: add
+                - name: edit
+                - name: confirmDeletion
+            - name: publish
+              items:
+                - name: publishDeletion
+                - name: unpublish
+            - name: exportimport
+              items:
+                - name: export
+                - name: import
+            - name: versioning
+              items:
+                - name: showPreviousVersion
+                - name: restorePreviousVersion
+    workbench:
+      contentViews: !override
+        - name: tree
+          multiSelect: true
+          $type: treeView
+          columns:
+            jcrName: &jcrNameColumn
+              $type: jcrTitleColumn
+              nodeTypeToIcon:
+                sit:event: icon-events
+            start: &startDateColumn
+              $type: zonedDateTimeColumn
+            end: &endDateColumn
+              $type: zonedDateTimeColumn
+            allDay: &allDayColumn
+              editable: false
+            activationStatus: &activationStatusColumn
+              $type: jcrStatusColumn
+              width: 130
+            mgnl:lastModified: &lastModifiedColumn
+              $type: dateColumn
+              editable: false
+              width: 200
+        - name: list
+          $type: listView
+          multiSelect: true
+          columns:
+            jcrName: *jcrNameColumn
+            jcrPath:
+              $type: jcrPathColumn
+            startDate: *startDateColumn
+            endDate: *endDateColumn
+            allDay: *allDayColumn
+            activationStatus: *activationStatusColumn
+            mgnl:lastModified: *lastModifiedColumn
+  detail:
+    class: info.magnolia.ui.contentapp.detail.DetailDescriptor
+    datasource:
+      $type: jcrDatasource
+      workspace: events
+    itemProvider:
+      $type: jcrNodeFromLocationProvider
+      nodeType: sit:event
+    actions:
+      cancel:
+        label: cancel
+        $type: closeAction
+      commit:
+        $type: commitAction
+        label: commit
+    form:
+      properties:
+        jcrName:
+          $type: textField
+          required: true
+          i18n: true
+        allDay:
+          $type: checkBoxField
+        start:
+          $type: zonedDateTimeField
+          defaultValue: now
+          required: true
+        end:
+          $type: zonedDateTimeField
+          defaultValue: now
+          required: true
+        location:
+          $type: textField
+        lead:
+          $type: richTextField
+          required: true
+          i18n: true
+        body:
+          $type: richTextField
+          required: true
+          i18n: true

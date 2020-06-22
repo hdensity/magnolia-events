@@ -1,0 +1,3 @@
+datasource:
+    workspace: events
+    autoCreate: false

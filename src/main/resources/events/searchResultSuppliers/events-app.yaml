@@ -1,0 +1,8 @@
+class: info.magnolia.periscope.search.jcr.JcrSearchResultSupplierDefinition
+appName: events-app
+workspace: events
+nodeTypes:
+  - sit:event
+fullTextSearch: true
+titleProperty: jcrName
+icon: icon-events

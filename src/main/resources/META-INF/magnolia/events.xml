@@ -1,0 +1,52 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+    <name>events</name>
+    <displayName>${project.name}</displayName>
+    <description>${project.description}</description>
+    <versionHandler>info.magnolia.module.DefaultModuleVersionHandler</versionHandler>
+    <version>${project.version}</version>
+
+    <components>
+        <id>datasource-zoneIds</id>
+
+        <component>
+            <type>info.magnolia.ui.field.SelectFieldSupport</type>
+            <implementation>it.schm.magnolia.events.ui.datasource.ZoneIdSelectFieldSupport</implementation>
+        </component>
+    </components>
+
+    <components>
+        <id>main</id>
+
+        <component>
+            <type>it.schm.magnolia.events.ui.utils.DateTimeFormatProvider</type>
+            <implementation>it.schm.magnolia.events.ui.utils.DateTimeFormatProvider</implementation>
+        </component>
+        <component>
+            <type>it.schm.magnolia.events.ui.utils.DateTimeFormatterProvider</type>
+            <implementation>it.schm.magnolia.events.ui.utils.DateTimeFormatterProvider</implementation>
+        </component>
+    </components>
+
+    <dependencies>
+        <dependency>
+            <name>core</name>
+            <version>6.2/*</version>
+        </dependency>
+
+        <dependency>
+            <name>ui-framework-core</name>
+            <version>6.2/*</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <name>magnolia</name>
+            <workspaces>
+                <workspace>events</workspace>
+            </workspaces>
+            <nodeTypeFile>/mgnl-nodetypes/sit-events-nodetypes.cnd</nodeTypeFile>
+        </repository>
+    </repositories>
+</module>
