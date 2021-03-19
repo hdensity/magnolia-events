@@ -74,7 +74,7 @@
         <version.mockito>3.3.3</version.mockito>
         <version.assertj>3.16.1</version.assertj>
         <version.equalsverifier>3.3</version.equalsverifier>
-        <version.tomcat.embed>9.0.36</version.tomcat.embed>
+        <version.tomcat.embed>9.0.41</version.tomcat.embed>
 
         <version.jacoco>0.8.5</version.jacoco>
         <jacoco.reportPath>${project.basedir}/target/jacoco/jacoco.exec</jacoco.reportPath>
